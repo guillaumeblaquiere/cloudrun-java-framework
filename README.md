@@ -50,7 +50,7 @@ curl https://micronaut-<hash>.run.app/api/
 curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://micronaut-<hash>.run.app/api/
 ```
 
-## Micronaut application (without graalvm)
+## Micronaut application (with graalvm)
 
 For building
 ```bash
@@ -78,6 +78,15 @@ curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://micr
 | Micronaut| 8s to 12s | 46.5Mb |131Mb|
 | Micronaut + graalvm | 2s |7.5Mb |22Mb|
 
-The container size can be optimzed by selecting a slim/distroless image in dockerfile 
+The container size can be optimzed by selecting a slim/distroless image in dockerfile. The size haven't impact on the cold start but impact memory footprint
 
-For example, you can reduce from 150Mb to 56Mb the size of the Springboot image by selecting `openjdk8:jdk8u202-b08-alpine-slim` instead of `openjdk8` (without tag)
+### Example 
+
+You can reduce from 150Mb to 56Mb the size of the Springboot image by selecting `openjdk8:jdk8u202-b08-alpine-slim` instead of `openjdk8` (without tag). 
+
+The memory footprint is between 13Mb (small image) and 24Mb (larger image)
+
+# License
+
+This library is licensed under Apache 2.0. Full license text is available in
+[LICENSE](https://github.com/guillaumeblaquiere/cloudrun-java-framework/tree/master/LICENSE).
