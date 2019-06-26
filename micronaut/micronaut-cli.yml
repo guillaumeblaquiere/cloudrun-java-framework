@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: fr.gblaquiere.micronaut
+---
+testFramework: junit
+sourceLanguage: java
