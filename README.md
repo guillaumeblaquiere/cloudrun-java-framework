@@ -70,21 +70,58 @@ curl https://micronaut-graalvm-<hash>.run.app/api/
 curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://micronaut-graalvm-<hash>.run.app/api/
 ```
 
+## Servlet + Jetty
+
+For building
+```bash
+cd servlet
+gcloud builds submit
+```
+
+To deploy on Cloud Run
+```bash
+gcloud beta run deploy servlet --image gcr.io/<projectID>/servlet
+```
+
+Then simply perform a get on the URL/api to perform a test.
+```bash
+curl https://servlet-<hash>.run.app/api/
+#If deployed privately
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://servlet-<hash>.run.app/api/
+```
+
 # Observed result
 
-| Runner        | Cold start duration| Memory usage | Container size |
-| ------------- |:-------------:|:-----:|:-----:|
-| SpringBoot| 15s to 18s | 13.1Mb |56Mb|
-| Micronaut| 8s to 12s | 46.5Mb |131Mb|
-| Micronaut + graalvm | 2s |7.5Mb |22Mb|
+The result are observed on GCP console. 
+- Cloud Run Metrics for memory usage
+- Cloud Run Log for cold start
+- Container registry for container size
+- Hey benchmark for average response time **from the cloud shell**
 
-The container size can be optimzed by selecting a slim/distroless image in dockerfile. The size haven't impact on the cold start but impact memory footprint
+Benchmark is performed with [hey](https://github.com/rakyll/hey) with 
+- 1 concurrency request
+- 2500 requests from **cloudshell** 
+- secure Cloud Run
+- 5 requests per second
+
+The aim is to limit the test to 1 container and to have a nice memory usage graph. 
+If you perform only 1 request, the graph take the memory value when it want and it's not relevant
+
+`hey -c 1 -n 2500 -q 5 -H "Authorization: Bearer $(gcloud auth print-identity-token)" <url>`
+
+
+| Runner        | Cold start duration| Memory usage | Container size | Average Response time |
+| ------------- |:-------------:|:-----:|:-----:|:-----:|
+| SpringBoot| 15s to 18s | 128Mb |56Mb|114ms|
+| Micronaut| 8s to 12s | 128Mb |131Mb|122ms|
+| Micronaut + graalvm | 2s |128Mb |22Mb|114ms|
+| Servlet | 1.5s - 1.9s |127Mb |43Mb|115ms|
+
+The container size can be optimized by selecting a slim/distroless image in dockerfile. The size haven't impact on the cold start.
 
 ### Example 
 
 You can reduce from 150Mb to 56Mb the size of the Springboot image by selecting `openjdk8:jdk8u202-b08-alpine-slim` instead of `openjdk8` (without tag). 
-
-The memory footprint is between 13Mb (small image) and 24Mb (larger image)
 
 # License
 

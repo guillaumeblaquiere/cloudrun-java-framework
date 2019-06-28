@@ -1,0 +1,34 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+    }
+}
+
+plugins {
+    id "com.github.johnrengelman.shadow" version "4.0.2"
+    id "application"
+    id "java"
+}
+
+sourceCompatibility = 1.8
+mainClassName = 'fr.gblaquiere.servlet.ServletApplication'
+group 'fr.gblaquiere'
+version '1.0-SNAPSHOT'
+
+ext {
+    slf4jVersion = '1.7.26'
+    jettyVersion = '9.4.19.v20190610'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile "org.eclipse.jetty:jetty-server:${jettyVersion}"
+    compile "org.eclipse.jetty:jetty-servlet:${jettyVersion}"
+}
