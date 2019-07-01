@@ -112,10 +112,12 @@ If you perform only 1 request, the graph take the memory value when it want and 
 
 | Runner        | Cold start duration| Memory usage | Container size | Average Response time |
 | ------------- |:-------------:|:-----:|:-----:|:-----:|
-| SpringBoot| 15s to 18s | 128Mb |56Mb|114ms|
+| SpringBoot| 15s to 18s (10s*) | 128Mb |56Mb (63Mb*)|114ms|
+| SpringBoot-webflux| 12s (9s*) | 128Mb |58Mb (64Mb*)|115ms|
 | Micronaut| 8s to 12s | 128Mb |131Mb|122ms|
 | Micronaut + graalvm | 2s |128Mb |22Mb|114ms|
 | Servlet | 1.5s - 1.9s |127Mb |43Mb|115ms|
+\* Values with JIB maven plugin.
 
 The container size can be optimized by selecting a slim/distroless image in dockerfile. The size haven't impact on the cold start.
 
