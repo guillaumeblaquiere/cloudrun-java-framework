@@ -12,6 +12,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "4.0.2"
     id "application"
     id "java"
+    id 'com.google.cloud.tools.jib' version '1.3.0'
 }
 
 sourceCompatibility = 1.8
@@ -31,4 +32,11 @@ repositories {
 dependencies {
     compile "org.eclipse.jetty:jetty-server:${jettyVersion}"
     compile "org.eclipse.jetty:jetty-servlet:${jettyVersion}"
+}
+
+jib {
+    to {
+        image = 'gcr.io/PROJECT_ID/servlet'
+        credHelper = 'gcr'
+    }
 }

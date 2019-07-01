@@ -10,17 +10,41 @@ I simply use the out-of-the-box code and runners.
 
 ## Spring Boot application
 
-### Packaging, deployment and tests
-
 For building
 ```bash
 cd springboot
 gcloud builds submit
+
+#Use JIB, replace the PROJECT_ID by your project id
+mvn compile jib:build
 ```
 
 To deploy on Cloud Run
 ```bash
 gcloud beta run deploy springboot --image gcr.io/<projectID>/springboot
+```
+
+Then simply perform a get on the URL/api to perform a test.
+```bash
+curl https://springboot-<hash>.run.app/api/
+#If deployed privately
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://springboot-<hash>.run.app/api/
+```
+
+## Spring Boot optimized application
+
+For building
+```bash
+cd springboot-webflux
+gcloud builds submit
+
+#Use JIB, replace the PROJECT_ID by your project id
+mvn compile jib:build
+```
+
+To deploy on Cloud Run
+```bash
+gcloud beta run deploy springboot --image gcr.io/<projectID>/springboot-webflux
 ```
 
 Then simply perform a get on the URL/api to perform a test.
@@ -36,6 +60,9 @@ For building
 ```bash
 cd micronaut
 gcloud builds submit
+
+#Use JIB, replace the PROJECT_ID by your project id
+./gradlew jib
 ```
 
 To deploy on Cloud Run
@@ -76,6 +103,9 @@ For building
 ```bash
 cd servlet
 gcloud builds submit
+
+#Use JIB, replace the PROJECT_ID by your project id
+./gradlew jib
 ```
 
 To deploy on Cloud Run
@@ -112,12 +142,12 @@ If you perform only 1 request, the graph take the memory value when it want and 
 
 | Runner        | Cold start duration| Memory usage | Container size | Average Response time |
 | ------------- |:-------------:|:-----:|:-----:|:-----:|
-| SpringBoot| 15s to 18s (10s*) | 128Mb |56Mb (63Mb*)|114ms|
-| SpringBoot-webflux| 12s (9s*) | 128Mb |58Mb (64Mb*)|115ms|
-| Micronaut| 8s to 12s | 128Mb |131Mb|122ms|
+| SpringBoot| 17s (10s*) | 128Mb |56Mb (63Mb*)|114ms|
+| SpringBoot-webflux| 9s (5s*) | 128Mb |58Mb (64Mb*)|115ms|
+| Micronaut| 10s (7s*) | 128Mb |131Mb (60Mb*)|122ms|
 | Micronaut + graalvm | 2s |128Mb |22Mb|114ms|
-| Servlet | 1.5s - 1.9s |127Mb |43Mb|115ms|
-\* Values with JIB maven plugin.
+| Servlet | 1.6s (1.8s*) |127Mb |43Mb (50Mb*)|115ms|
+\* Values with [JIB](https://github.com/GoogleContainerTools/jib) plugin.
 
 The container size can be optimized by selecting a slim/distroless image in dockerfile. The size haven't impact on the cold start.
 
