@@ -21,14 +21,14 @@ mvn compile jib:build
 
 To deploy on Cloud Run
 ```bash
-gcloud beta run deploy springboot --image gcr.io/<projectID>/springboot
+gcloud beta run deploy springboot --image gcr.io/${PROJECT_ID}/springboot
 ```
 
 Then simply perform a get on the URL/api to perform a test.
 ```bash
 curl https://springboot-<hash>.run.app/api/
 #If deployed privately
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://springboot-<hash>.run.app/api/
+curl -H "Authorization: Bearer $(gcloud config config-helper --format='value(credential.id_token)')" https://springboot-<hash>.run.app/api/
 ```
 
 ## Spring Boot optimized application
@@ -44,14 +44,14 @@ mvn compile jib:build
 
 To deploy on Cloud Run
 ```bash
-gcloud beta run deploy springboot --image gcr.io/<projectID>/springboot-webflux
+gcloud beta run deploy springboot --image gcr.io/${PROJECT_ID}/springboot-webflux --platform managed
 ```
 
 Then simply perform a get on the URL/api to perform a test.
 ```bash
 curl https://springboot-<hash>.run.app/api/
 #If deployed privately
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://springboot-<hash>.run.app/api/
+curl -H "Authorization: Bearer $(gcloud config config-helper --format='value(credential.id_token)')" https://springboot-<hash>.run.app/api/
 ```
 
 ## Micronaut application (without graalvm)
@@ -67,14 +67,14 @@ gcloud builds submit
 
 To deploy on Cloud Run
 ```bash
-gcloud beta run deploy micronaut --image gcr.io/<projectID>/micronaut
+gcloud beta run deploy micronaut --image gcr.io/${PROJECT_ID}/micronaut --platform managed
 ```
 
 Then simply perform a get on the URL/api to perform a test.
 ```bash
 curl https://micronaut-<hash>.run.app/api/
 #If deployed privately
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://micronaut-<hash>.run.app/api/
+curl -H "Authorization: Bearer $(gcloud config config-helper --format='value(credential.id_token)')" https://micronaut-<hash>.run.app/api/
 ```
 
 ## Micronaut application (with graalvm)
@@ -87,14 +87,14 @@ gcloud builds submit --timeout 30m
 
 To deploy on Cloud Run
 ```bash
-gcloud beta run deploy micronaut-graalvm --image gcr.io/<projectID>/micronaut-graalvm
+gcloud beta run deploy micronaut-graalvm --image gcr.io/${PROJECT_ID}/micronaut-graalvm --platform managed
 ```
 
 Then simply perform a get on the URL/api to perform a test.
 ```bash
 curl https://micronaut-graalvm-<hash>.run.app/api/
 #If deployed privately
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://micronaut-graalvm-<hash>.run.app/api/
+curl -H "Authorization: Bearer $(gcloud config config-helper --format='value(credential.id_token)')" https://micronaut-graalvm-<hash>.run.app/api/
 ```
 
 ## Servlet + Jetty
@@ -110,14 +110,14 @@ gcloud builds submit
 
 To deploy on Cloud Run
 ```bash
-gcloud beta run deploy servlet --image gcr.io/<projectID>/servlet
+gcloud beta run deploy servlet --image gcr.io/${PROJECT_ID}/servlet --platform managed
 ```
 
 Then simply perform a get on the URL/api to perform a test.
 ```bash
 curl https://servlet-<hash>.run.app/api/
 #If deployed privately
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://servlet-<hash>.run.app/api/
+curl -H "Authorization: Bearer $(gcloud config config-helper --format='value(credential.id_token)')" https://servlet-<hash>.run.app/api/
 ```
 
 # Observed result
@@ -137,7 +137,7 @@ Benchmark is performed with [hey](https://github.com/rakyll/hey) with
 The aim is to limit the test to 1 container and to have a nice memory usage graph. 
 If you perform only 1 request, the graph take the memory value when it want and it's not relevant
 
-`hey -c 1 -n 2500 -q 5 -H "Authorization: Bearer $(gcloud auth print-identity-token)" <url>`
+`hey -c 1 -n 2500 -q 5 -H "Authorization: Bearer $(gcloud config config-helper --format='value(credential.id_token)')" <url>`
 
 
 | Runner        | Cold start duration| Memory usage | Container size | Average Response time |
