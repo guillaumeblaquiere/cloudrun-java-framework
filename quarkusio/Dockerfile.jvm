@@ -1,0 +1,16 @@
+
+FROM maven:3.6-jdk-8-alpine as builder
+
+# Copy local code to the container image.
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+
+# Build a release artifact.
+RUN mvn package -DskipTests
+
+FROM fabric8/java-jboss-openjdk8-jdk
+ENV JAVA_OPTIONS='-Dquarkus.http.host=0.0.0.0 -Dquarkus.http.port=${PORT}'
+COPY --from=builder /app/target/lib/* /deployments/lib/
+COPY --from=builder /app/target/*-runner.jar /deployments/app.jar
+ENTRYPOINT [ "/deployments/run-java.sh" ]
